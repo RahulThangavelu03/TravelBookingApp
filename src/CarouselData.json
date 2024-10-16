@@ -1,0 +1,32 @@
+{
+    "Slides": [
+        {
+            "src": "../src/assets/images/traveling.jpg",
+            "alt": "traveling"
+        },
+        {
+            "src": "../src/assets/images/experience.png",
+            "alt": "experience"
+        },
+        {
+            "src": "../src/assets/images/gallery-05.jpg",
+            "alt": "camera"
+        },
+        {
+            "src": "../src/assets/images/gallery-03.jpg",
+            "alt": "man on tree"
+        },
+        {
+            "src": "../src/assets/images/world.png",
+            "alt": "world"
+        },
+        {
+            "src": "../src/assets/images/male-tourist.png",
+            "alt": "male_tourist"
+        },
+        {
+            "src": "../src/assets/images/logo.png",
+            "alt": "logo"
+        }
+    ]
+}
