@@ -2,24 +2,58 @@ import React from "react"
 import Login from "../Components/Login"
 import { Link } from "react-router-dom"
 import { useState } from "react"
+import { HandleSignUp } from "../Features/UserData"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 function Signup() {
 
 
-    const [name, setName] = useState()
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
+    const [userName, setuserName] = useState()
+    const [userEmail, setuserEmail] = useState()
+    const [userPassword, setuserPassword] = useState()
+    const Navigate = useNavigate()
+
+    const dispatch = useDispatch()
+    const state = useSelector(state => state.User)
+
+    let Sessions = sessionStorage.getItem("sessions")
+    Sessions = JSON.parse(Sessions)
+    console.log(Sessions, "duplicateeee SIgnupcomp")
 
 
+
+    console.log(state, "state in SIgnupCOmpoenet")
 
 
     function handleSubmit(e) {
 
+        let ExsistingUser
+
+        if (Sessions) {
 
 
-        alert(e, "eeeee")
+            ExsistingUser = Sessions.IDs.find(i => i.email == userEmail)
+        }
 
-        console.log(e, "eee")
+        if (ExsistingUser) {
+
+
+            console.log(ExsistingUser, "exsistinguserExsisit")
+            alert("user id already exsist please login")
+
+
+
+        }
+
+        else {
+
+            dispatch(HandleSignUp({ username: userName, useremail: userEmail, userpassword: userPassword }))
+
+            Navigate("/TripCatalog")
+        }
+
 
     }
 
@@ -44,7 +78,7 @@ function Signup() {
                             style={{ maxWidth: '300px' }}
                             required
 
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setuserName(e.target.value)}
 
                         />
                     </div>
@@ -60,7 +94,7 @@ function Signup() {
                             style={{ maxWidth: '300px' }}
                             required
 
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => setuserEmail(e.target.value)}
                         />
                     </div><br />
 
@@ -79,7 +113,7 @@ function Signup() {
 
                             required style={{ maxWidth: '300px' }}
 
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setuserPassword(e.target.value)}
                         />
 
 

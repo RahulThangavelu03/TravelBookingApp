@@ -5,6 +5,16 @@
 
 }
 
+
+@media(max-width:320px) {
+  .NavBar {
+    width: 100%
+  }
+
+
+
+}
+
 .Logo {
   height: 80px;
   width: 200px;
@@ -27,7 +37,7 @@
 #Catalogimage {
 
   height: 250px;
-  width: 250px;
+  width: 100%;
   transition: transform 0.3s ease;
 }
 
@@ -42,7 +52,22 @@
 
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin: 10px;
-  padding: auto
+  padding: 10px;
+  gap: 10px;
+}
+
+
+
+@media(max-width:400px) {
+
+  #CatalogOptions {
+
+    grid-template-columns: 1fr 1fr;
+    margin: 10px;
+    padding: 5px;
+
+  }
+
 }
 
 
@@ -52,9 +77,37 @@
   justify-content: center;
   align-items: center;
   height: 50vh;
-
+  padding: 20px;
 
 }
+
+
+@media (max-width:768px) {
+
+  #SignupContainer {
+    height: auto;
+    flex-direction: column;
+    padding: 15px;
+
+
+  }
+}
+
+
+@media(max-width:250-px) {
+
+  #SignupContainer {
+
+    height: auto;
+    flex-direction: column;
+    padding: 8px;
+
+
+
+  }
+
+}
+
 
 
 
@@ -137,4 +190,14 @@
 
 
   }
+}
+
+#para {
+
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+
+.btn-primary {
+  background-color: #FF7518 !important;
 }

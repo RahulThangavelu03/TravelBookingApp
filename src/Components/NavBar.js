@@ -16,7 +16,7 @@ function NavBar() {
             <div className="NavBar">
 
                 <img className="Logo" src={logo} alt="logo"></img>
-                <div style={{ padding: "28px" }}><Link to="/">HomePage</Link></div>
+                <div style={{ padding: "28px", color: "orange" }}><Link to="/">HomePage</Link></div>
                 <div style={{ padding: "28px" }}><Link to="/TripCatalog">TripCatalog</Link></div>
                 <div style={{ padding: "28px" }}><Link to="/Tours">MyTours</Link></div>
                 <div style={{ padding: "28px" }}><Link to="/Login">Login</Link >/<Link to="/Signup">Signup</Link></div>

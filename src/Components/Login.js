@@ -1,27 +1,66 @@
 import React, { useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import Signup from "./SignupComponent"
-import { HandleUserRequest } from "../Features/UserData"
+import { HandleLogin } from "../Features/UserData"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
+
+import { useNavigate } from "react-router-dom"
 
 function LoginComponnent() {
 
 
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
+    const [formEmail, setFormEmail] = useState()
+    const [formPassword, setFormPassword] = useState()
+
+    let userData = sessionStorage.getItem("sessions")
+    userData = JSON.parse(userData)
+
+    console.log(userData, "userDataaaaa")
+
+
 
 
     const dipatach = useDispatch()
+    const Navigate = useNavigate()
 
 
 
 
     function handleSubmit() {
 
+        let ExsistingUser
 
-        // let value = { userEmail: email, userPassword: password }
-        dipatach(HandleUserRequest({ userEmail: email, userPassword: password }))
+        try {
+            if (userData) {
+
+
+                ExsistingUser = userData.IDs.find(i => i.email == formEmail)
+            }
+
+
+
+            if (ExsistingUser) {
+
+
+                dipatach(HandleLogin({ userEmail: formEmail, userPassword: formPassword }))
+
+                Navigate("/TripCatalog")
+
+
+            }
+
+
+            else {
+                alert("account not found,please Signup")
+            }
+        }
+        catch (error) {
+            alert(error, "error")
+
+
+        }
+
 
 
     }
@@ -50,7 +89,7 @@ function LoginComponnent() {
                             style={{ maxWidth: '300px' }}
                             required
 
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => setFormEmail(e.target.value)}
                         />
                     </div><br />
 
@@ -66,7 +105,7 @@ function LoginComponnent() {
 
                             required style={{ maxWidth: '300px' }}
 
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setFormPassword(e.target.value)}
                         />
 
 

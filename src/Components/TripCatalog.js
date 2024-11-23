@@ -1,26 +1,26 @@
 import React from "react"
-
 import { useState } from "react";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import tours from "../assets/data/tours"
 import { IoManSharp } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { MyToursAction } from "../Features/UserData";
+import { useSelector } from "react-redux";
 // import gallery06 from "../src/assets/images/gallery-06.jpg"
-
-
 
 
 
 function TripCatalog() {
 
     const [location, setLocation] = useState()
-    const [date, setDate] = useState()
+    const [formdate, setFormDate] = useState()
     const [TotalMembers, setTotalMembers] = useState()
     const [CatalogData, setCatalogData] = useState(tours)
     const [searchData, setSearchData] = useState(tours)
 
-
-
+    const userIdExsist = useSelector(state => state.User)
+    const Dispatch = useDispatch()
 
 
 
@@ -32,7 +32,8 @@ function TripCatalog() {
 
 
         let temp = tours.filter(i => i.city.toLowerCase() == location.toLowerCase()).filter(i => i.capacity >= TotalMembers)
-
+        let D1
+        let D2
 
         temp.forEach(i => {
 
@@ -40,43 +41,34 @@ function TripCatalog() {
             let ClosingDate = i.Open_to
             console.log(ClosingDate, "closing")
 
-            let D1 = new Date(OpeningDate)
-            let D2 = new Date(ClosingDate)
+            D1 = new Date(OpeningDate)
+            D2 = new Date(ClosingDate)
 
 
-
-            console.log(D1, "d11111111")
-
-            console.log(D2, "d222222222")
+            // console.log(D1, "d11111111")
+            // console.log(D2, "d222222222")
         })
 
 
+        console.log(formdate, "formdatw")
 
+        let D3 = new Date(formdate)
 
+        console.log(D3, "de33333")
 
+        if (D3 >= D1 && D3 <= D2) {
 
+            setCatalogData(temp)
+            console.log(searchData, "searchdata")
 
+        }
 
-
-
-
-        // let Results=temp.filter(i=>i)
-
-        // console.log(OpeningDate, "OpeningDate")
-        // console.log(ClosingDate, " ClosingDate")
-
-
-
-
-
+        else {
+            setCatalogData([])
+        }
 
 
         console.log(temp, "temp")
-
-
-
-
-
 
     }
 
@@ -86,25 +78,52 @@ function TripCatalog() {
 
     }
     function MountainsFilter() {
-        const Mountains = tours.filter(i => i.landscape == "Mountain")
+        const Mountains = CatalogData.filter(i => i.landscape == "Mountain")
         setCatalogData(Mountains)
 
     }
 
     function BeachFilter() {
-        let Beaches = tours.filter(i => i.landscape == "Beach")
+        let Beaches = CatalogData.filter(i => i.landscape == "Beach")
         setCatalogData(Beaches)
 
     }
 
     function IconicPlacesFilter() {
-        let Destination = tours.filter(i => i.landscape == "Iconic")
+        let Destination = CatalogData.filter(i => i.landscape == "Iconic")
         setCatalogData(Destination)
 
 
     }
 
-    function AddtoMYTours() {
+    function AddtoMYTours(i) {
+
+        console.log(i, "ii")
+
+
+
+        let temp = sessionStorage.getItem("sessions")
+
+        // console.log(temp, "tempppppppppppppp")
+
+        if (temp) {
+
+
+            Dispatch(MyToursAction(i))
+
+        }
+
+        else {
+
+
+            alert("user account not found please login or SignUp")
+        }
+
+
+
+
+
+
 
     }
 
@@ -125,7 +144,7 @@ function TripCatalog() {
                                 <input type="text" class="form-control" placeholder="City" onChange={(e) => setLocation(e.target.value)} aria-label="City" />
                             </div>
                             <div class="col-sm">
-                                <input type="Date" class="form-control" placeholder="Date" onChange={(e) => setDate(e.target.value)} aria-label="State" />
+                                <input type="Date" class="form-control" placeholder="Date" onChange={(e) => setFormDate(e.target.value)} aria-label="State" />
                             </div>
                             <div class="col-sm">
                                 <input type="text" class="form-control" placeholder={"members"} onChange={(e) => setTotalMembers(e.target.value)} aria-label="Zip" />
@@ -157,7 +176,7 @@ function TripCatalog() {
 
             <div id="CatalogOptions">
 
-                {CatalogData.map((i) => {
+                {CatalogData.length ? CatalogData.map((i) => {
                     return (
                         <div>
 
@@ -169,14 +188,14 @@ function TripCatalog() {
                             <p> City: {i.city}</p>
                             <p>Country: {i.country}</p>
 
-                            <button type="button" class="btn btn-primary" onClick={AddtoMYTours}>Add to MyTours</button><br /><br />
+                            <button type="button" class="btn btn-primary" onClick={(e) => AddtoMYTours(i)}>Add to MyTours</button><br /><br />
 
 
 
                         </div>
                     )
 
-                })}
+                }) : <p id="para">Hmm... nothing here. Maybe try searching for your next dream destination?</p>}
 
             </div>
 
