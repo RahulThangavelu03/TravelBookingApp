@@ -7,6 +7,7 @@ import Tours from "./Tours";
 import LandingPage from "./LandingPage";
 import LoginComponnent from "./Login";
 import Signup from "./SignupComponent";
+import TravelDestination from "./TravelDestinations";
 
 
 
@@ -32,6 +33,7 @@ function App() {
           <Route path='/TripCatalog' element={<TripCatalog></TripCatalog>}></Route>
           <Route path="/Login" element={<LoginComponnent></LoginComponnent>}></Route>
           <Route path="/Signup" element={<Signup></Signup>}></Route>
+          <Route path="/destinations/:key" element={<TravelDestination></TravelDestination>}></Route>
 
 
 

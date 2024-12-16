@@ -21,7 +21,7 @@ function LoginComponnent() {
 
 
 
-    const dipatach = useDispatch()
+    const dispatch = useDispatch()
     const Navigate = useNavigate()
 
 
@@ -38,12 +38,14 @@ function LoginComponnent() {
                 ExsistingUser = userData.IDs.find(i => i.email == formEmail)
             }
 
+            console.log(ExsistingUser, "Exsistinguser")
+
 
 
             if (ExsistingUser) {
 
 
-                dipatach(HandleLogin({ userEmail: formEmail, userPassword: formPassword }))
+                dispatch(HandleLogin({ userEmail: formEmail, userPassword: formPassword }))
 
                 Navigate("/TripCatalog")
 

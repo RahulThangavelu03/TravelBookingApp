@@ -39,7 +39,7 @@ const UserData = createSlice(
                     }
 
 
-                    const updatedIDs = [...exsistingValue.IDs, { "name": username, "email": useremail }]
+                    const updatedIDs = [...exsistingValue.IDs, { "name": username, "email": useremail, Tours: [] }]
                     console.log(exsistingValue, "exsistingvalue")
                     console.log(updatedIDs, "updatedId")
 
@@ -65,78 +65,156 @@ const UserData = createSlice(
 
 
                 }
+            },
+
+            HandleLogin(state, action) {
+
+
+                const { userEmail } = action.payload
+
+                let UserData = sessionStorage.getItem("sessions")
+                UserData = JSON.parse(UserData)
+                UserData.activeuser = userEmail
+
+
+                const sessions = {
+
+                    ...{ UserData }
+
+                }
+
+                console.log(UserData, "LOgindataaaaaaa")
+                console.log(sessions, "LOginSessions")
+                sessionStorage.setItem("sessions", JSON.stringify(sessions))
+
+            },
+
+
+            HandleLogOut(state, action) {
+
+                // alert("logout triggered")
+
+                let Sessions = sessionStorage.getItem("Sessions")
+
+                console.log(Sessions, "Initiallllllll")
+
+                try {
+
+                    if (!Sessions) {
+                        alert("No user ID found")
+
+                    }
+                    else {
+
+                        Sessions = JSON.parse(Sessions)
+                        console.log(Sessions, "sessions")
+
+                        if (!Sessions.IDs || Sessions.IDs.length == 0) {
+
+
+                            let IDtoBeRemoved = Sessions.activeuser
+                            console.log(IDtoBeRemoved, "IDtoBERemoved")
+
+                            let updatedIDs = Sessions.IDs.filter(i => i.email !== IDtoBeRemoved)
+
+                            let NewActiveUser = updatedIDs.length >= 1 ? updatedIDs[updatedIDs.length - 1].email : ""
+                            console.log(NewActiveUser, "Newactuveuser")
+                            if (updatedIDs.length >= 1) {
+
+                                Sessions = {
+                                    "activeuser": NewActiveUser,
+                                    "IDs": [
+                                        ...updatedIDs
+                                    ]
+
+
+
+                                }
+
+                            }
+
+
+                            else {
+
+
+                                Sessions = {
+                                    "activeuser": "",
+                                    "IDs": [
+
+                                    ]
+
+
+
+                                }
+
+
+                            }
+
+
+                            console.log(Sessions, "NewSessionsssss")
+
+                            sessionStorage.setItem("Sessions", JSON.stringify(Sessions))
+
+
+                        }
+
+                    }
+                }
+                catch (error) {
+
+                    console.log(error, "error inlogout")
+
+                }
+
+
+
+
+                console.log("custom hook")
+            },
+
+
+            MyToursAction(state, action) {
+
+
+                let temp = sessionStorage.getItem("sessions")
+
+                //console.log(temp, "temppppppppp")
+
+                let MyTourData = JSON.parse(temp) || { "tours": [] }
+                console.log(MyTourData, "MytourDataInitallllllll")
+
+                let activeuser = MyTourData.activeuser
+                console.log(activeuser, "activeuser",)
+
+                let index = MyTourData.IDs.findIndex(i => i.email == activeuser)
+                let Duplicate = MyTourData.IDs[index].Tours.findIndex(i => i.key == action.payload.key)
+                console.log(Duplicate, "DUplicateeeeeeeeeeeee")
+
+                if (Duplicate == -1) {
+
+
+                    MyTourData.IDs[index].Tours.push(action.payload)
+                }
+
+
+                else {
+                    console.log(MyTourData, "esleparttttttttt")
+
+                    return MyTourData
+
+                }
+
+                console.log(MyTourData, "mytourdata laterrrrrrrr")
+
+                sessionStorage.setItem("sessions", JSON.stringify(MyTourData));
+
+
             }
-
-        },
-
-
-
-        HandleLogin(state, action) {
-
-
-            let UserData = sessionStorage.get("sessions")
-            UserData = JSON.parse(UserData)
-
-            console.log(UserData, "LOgindata")
-
-
-
-
-
-        },
-
-
-
-
-
-
-
-        MyToursAction(state, action) {
-
-
-            let temp = sessionStorage.getItem("sessions")
-
-            console.log(temp, "temppppppppp")
-
-            let MyTourData = JSON.parse(temp) || { "tours": [] }
-            console.log(MyTourData, "MytourDataInitallllllll")
-
-
-
-            let activeuser = MyTourData.activeuser
-            console.log(activeuser, "activeuser",)
-
-
-            MyTourData[activeuser] = MyTourData[activeuser] || [];
-
-            console.log(action.payload, "action.payload")
-
-
-            let Duplicate = MyTourData[activeuser].find(i => i.name == action.payload.name)
-
-            console.log(Duplicate, "duplicateeeeee")
-
-            if (!Duplicate) {
-
-                MyTourData[activeuser].push(action.payload)
-            }
-
-            else {
-
-                MyTourData[activeuser] = MyTourData[activeuser]
-            }
-
-            console.log(MyTourData, "mytourdata laterrrrrrrr")
-
-
-            sessionStorage.setItem("sessions", JSON.stringify(MyTourData));
-
 
         }
-
     }
 )
 
-export const { HandleSignUp, HandleLogin, MyToursAction } = UserData.actions
+export const { HandleSignUp, HandleLogin, HandleLogOut, MyToursAction } = UserData.actions
 
 export default UserData.reducer

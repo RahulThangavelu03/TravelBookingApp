@@ -7,6 +7,7 @@ import { IoManSharp } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { MyToursAction } from "../Features/UserData";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 // import gallery06 from "../src/assets/images/gallery-06.jpg"
 
 
@@ -21,6 +22,7 @@ function TripCatalog() {
 
     const userIdExsist = useSelector(state => state.User)
     const Dispatch = useDispatch()
+    const Navigate = useNavigate()
 
 
 
@@ -96,7 +98,9 @@ function TripCatalog() {
 
     }
 
-    function AddtoMYTours(i) {
+    function AddtoMYTours(i, e) {
+
+        e.stopPropagation()
 
         console.log(i, "ii")
 
@@ -120,11 +124,12 @@ function TripCatalog() {
         }
 
 
+    }
 
 
+    function HandleClick() {
 
-
-
+        alert("clicked")
     }
 
 
@@ -178,7 +183,7 @@ function TripCatalog() {
 
                 {CatalogData.length ? CatalogData.map((i) => {
                     return (
-                        <div>
+                        <div key={i.key} onClick={() => HandleClick()}>
 
                             <img id="Catalogimage" src={i.image} alt={i.title} />
 
@@ -188,7 +193,7 @@ function TripCatalog() {
                             <p> City: {i.city}</p>
                             <p>Country: {i.country}</p>
 
-                            <button type="button" class="btn btn-primary" onClick={(e) => AddtoMYTours(i)}>Add to MyTours</button><br /><br />
+                            <button type="button" class="btn btn-primary" onClick={(e) => AddtoMYTours(i, e)}>Add to MyTours</button><br /><br />
 
 
 
