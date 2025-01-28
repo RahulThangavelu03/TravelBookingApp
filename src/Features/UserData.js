@@ -23,7 +23,8 @@ const UserData = createSlice(
                     let { username, useremail, userpassword } = action.payload
 
 
-                    state.push({ "name": username, "email": useremail, "password": userpassword })
+
+                    // state.push({ "name": username, "email": useremail, "password": userpassword })
 
                     console.log(state.User, "stateeeee")
 
@@ -53,6 +54,7 @@ const UserData = createSlice(
 
                     sessionStorage.setItem("sessions", JSON.stringify(sessions))
                     console.log(sessions, "sessions")
+                    state.push(sessions)
 
                 }
 
@@ -94,7 +96,7 @@ const UserData = createSlice(
 
                 // alert("logout triggered")
 
-                let Sessions = sessionStorage.getItem("Sessions")
+                let Sessions = sessionStorage.getItem("sessions")
 
                 console.log(Sessions, "Initiallllllll")
 
@@ -108,8 +110,11 @@ const UserData = createSlice(
 
                         Sessions = JSON.parse(Sessions)
                         console.log(Sessions, "sessions")
+                        console.log(Sessions.IDs, "Sessions.IDs")
 
-                        if (!Sessions.IDs || Sessions.IDs.length == 0) {
+                        let Dummy = {}
+
+                        if (Sessions.IDs.length >= 1) {
 
 
                             let IDtoBeRemoved = Sessions.activeuser
@@ -119,6 +124,20 @@ const UserData = createSlice(
 
                             let NewActiveUser = updatedIDs.length >= 1 ? updatedIDs[updatedIDs.length - 1].email : ""
                             console.log(NewActiveUser, "Newactuveuser")
+
+
+                            Sessions = {
+                                "activeuser": NewActiveUser,
+                                "IDs": [
+                                    ...updatedIDs
+                                ]
+                            }
+
+                            console.log(Sessions, "PreSessionsssssssssss")
+
+                            let temp = {}
+
+
                             if (updatedIDs.length >= 1) {
 
                                 Sessions = {
@@ -127,36 +146,52 @@ const UserData = createSlice(
                                         ...updatedIDs
                                     ]
 
-
-
                                 }
 
-                            }
+                                state = []
+                                temp["activeuser"] = NewActiveUser
+                                temp["IDs"] = [...updatedIDs]
+
+                                state.push(temp)
+
+                                console.log("Indiseloooooop")
 
 
-                            else {
-
-
-                                Sessions = {
-                                    "activeuser": "",
-                                    "IDs": [
-
-                                    ]
-
-
-
-                                }
 
 
                             }
 
 
-                            console.log(Sessions, "NewSessionsssss")
+                            console.log(updatedIDs, "updatedIDssssssssss")
 
-                            sessionStorage.setItem("Sessions", JSON.stringify(Sessions))
+                            console.log(NewActiveUser, "Newactiveuserrrr")
 
 
                         }
+
+                        else {
+
+
+                            Sessions = {
+                                "activeuser": "",
+                                "IDs": [
+
+                                ]
+
+
+
+                            }
+
+
+                        }
+
+
+                        console.log(Sessions, "NewSessionsssss")
+
+                        sessionStorage.setItem("Sessions", JSON.stringify(Sessions))
+
+
+
 
                     }
                 }
@@ -218,3 +253,97 @@ const UserData = createSlice(
 export const { HandleSignUp, HandleLogin, HandleLogOut, MyToursAction } = UserData.actions
 
 export default UserData.reducer
+
+
+
+
+
+
+
+
+
+
+// HandleLogOut(state, action) {
+
+//     // alert("logout triggered")
+
+//     let Sessions = sessionStorage.getItem("sessions")
+
+//     console.log(Sessions, "Initiallllllll")
+
+//     try {
+
+//         if (!Sessions) {
+//             alert("No user ID found")
+
+//         }
+//         else {
+
+//             Sessions = JSON.parse(Sessions)
+//             console.log(Sessions, "sessions")
+
+//             if (!Sessions.IDs || Sessions.IDs.length == 0) {
+
+
+//                 let IDtoBeRemoved = Sessions.activeuser
+//                 console.log(IDtoBeRemoved, "IDtoBERemoved")
+
+//                 let updatedIDs = Sessions.IDs.filter(i => i.email !== IDtoBeRemoved)
+
+//                 let NewActiveUser = updatedIDs.length >= 1 ? updatedIDs[updatedIDs.length - 1].email : ""
+//                 console.log(NewActiveUser, "Newactuveuser")
+//                 if (updatedIDs.length >= 1) {
+
+//                     Sessions = {
+//                         "activeuser": NewActiveUser,
+//                         "IDs": [
+//                             ...updatedIDs
+//                         ]
+
+
+
+//                     }
+
+//                 }
+
+
+//                 else {
+
+
+//                     Sessions = {
+//                         "activeuser": "",
+//                         "IDs": [
+
+//                         ]
+
+
+
+//                     }
+
+
+//                 }
+
+
+//                 console.log(Sessions, "NewSessionsssss")
+
+//                 sessionStorage.setItem("Sessions", JSON.stringify(Sessions))
+
+
+//             }
+
+//         }
+//     }
+//     catch (error) {
+
+//         console.log(error, "error inlogout")
+
+//     }
+
+
+
+
+//     console.log("custom hook")
+// },
+
+
+

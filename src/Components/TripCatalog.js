@@ -24,7 +24,7 @@ function TripCatalog() {
     const Dispatch = useDispatch()
     const Navigate = useNavigate()
 
-
+    console.log(userIdExsist, "userIdExsist")
 
 
     function HandleForm(e) {
@@ -102,7 +102,7 @@ function TripCatalog() {
 
         e.stopPropagation()
 
-        console.log(i, "ii")
+        // console.log(i, "ii")
 
 
 
@@ -127,9 +127,12 @@ function TripCatalog() {
     }
 
 
-    function HandleClick() {
+    function HandleClick(i) {
 
-        alert("clicked")
+        console.log(i, "keyyyyyyyyyyyy")
+        Navigate(`/destinations/${i}`)
+
+
     }
 
 
@@ -183,7 +186,7 @@ function TripCatalog() {
 
                 {CatalogData.length ? CatalogData.map((i) => {
                     return (
-                        <div key={i.key} onClick={() => HandleClick()}>
+                        <div key={i.key} onClick={(e) => HandleClick(i.key)}>
 
                             <img id="Catalogimage" src={i.image} alt={i.title} />
 

@@ -27,6 +27,8 @@ function App() {
 
       <BrowserRouter>
         <NavBar></NavBar><br /><br />
+
+
         <Routes>
           <Route path="/" element={<LandingPage></LandingPage>}></Route>
           <Route path="/Tours" element={<Tours></Tours>}></Route>
@@ -38,6 +40,7 @@ function App() {
 
 
         </Routes>
+
 
 
 
