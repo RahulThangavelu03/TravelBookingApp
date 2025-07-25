@@ -1,29 +1,53 @@
-import React, { useState } from "react"
+import React, { useState ,useEffect} from "react"
 // import logo from "../src/assets/images/logo.png"
 import logo from "../assets/images/logo.png"
-import LoginComponnent from "./Login"
-import { Link } from "react-router-dom"
-import LandingPage from "./LandingPage"
-import useLogOut from "../useLogOut"
+import {Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
-import Signup from "./SignupComponent"
-import { HandleLogOut } from "../Features/UserData"
-
-
-
+import { HandleLogOut, SwitchActiveUser } from "../Features/UserData"
+ import { ToastContainer, toast ,Zoom } from 'react-toastify';
+ import {hydrateFromSession } from "../Features/UserData"
 
 
 
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const Accounts = useSelector(state => state.User)
-    const Dispatch = useDispatch()
+    const [hovered, setHovered] = useState(null);
+ //  const [Accounts,setAccounts]=useState({"activeuser":"","IDs":[]})
+ const Dispatch = useDispatch()
+
+let Accounts= useSelector(state=>state.User) || {"activeuser":"","IDs":[]}
+ 
 
 
 
 
-    const toggleMenu = () => {
+
+useEffect(()=>{
+
+console.log("every refresh")
+
+Dispatch(hydrateFromSession())
+
+},[Dispatch])
+
+
+
+
+
+    console.log(Accounts,"accountssssssss")
+    const activeuser=Accounts.activeuser
+   
+
+    let AccountToBeLoggedOut=  Accounts?.IDs?.length>=1? Accounts.IDs.find((user)=>user.email==activeuser):''
+
+   
+console.log(AccountToBeLoggedOut,"AccountToBeLoggedOut")
+
+
+
+
+  const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
@@ -34,60 +58,128 @@ function NavBar() {
 
     function PerformLogOut() {
 
-        Dispatch(HandleLogOut())
+
+
+
+
+if( Accounts.IDs.length>=1){
+
+Dispatch(HandleLogOut(Accounts))
+        
+
+setTimeout(()=>{
+
+    
+       toast.success(`${AccountToBeLoggedOut.name}'s account has been Logged out Successfully`, {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: false,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
+
+ 
+},100)
+
+
+return
+
+}
+
+
+else{
+
+
+    toast.warn('Account not found Login/Sign Up ', {
+    position: "top-center",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Zoom,
+    })
+
+}
 
     }
 
 
+function HandleSwitchUSer(user){
 
+    Dispatch(SwitchActiveUser(user.email))
+    console.log(user,"user in Handleswicth")
+
+
+}
 
 
     return (
+        <div>
+            <ToastContainer/> 
+        
         <nav className="NavBar">
             <img className="Logo" src={logo} alt="Logo" />
+           
             <div className="Hamburger" onClick={toggleMenu}>
-                <span></span>
-                <span></span>
-                <span></span>
+                  <span></span>
+  <span></span>
+  <span></span>
+                
             </div>
+
             <div className={`NavLinks ${isMenuOpen ? "Show" : ""}`}>
+            
                 <Link to="/">HomePage</Link>
                 <Link to="/TripCatalog">TripCatalog</Link>
                 <Link to="/Tours">MyTours</Link>
-                <div className="Dropdown">
+                 <div className="Dropdown">
                     <span
                         className="DropdownToggle"
                         onClick={toggleDropdown}
                     >
                         Accounts
-                    </span>
-                    <ul className={`DropdownMenu ${isDropdownOpen ? "Show" : ""}`}>
-                        {Accounts && Accounts.map((i) => {
+                    </span> 
+                     <ul className={`DropdownMenu ${isDropdownOpen ? "Show" : ""}`}>
+                   
+                        { Accounts? Accounts.IDs.map((user) => {
                             return (
-                                <div key={i.email}>
+                                <li  className="dropdownoptions" key={user.email}
 
-                                    <li>{i.name}</li>
-                                </div>
+                                 
+   onClick={(e)=>HandleSwitchUSer(user)}     onMouseEnter={() => setHovered(user.email)}
+          onMouseLeave={() => setHovered(null)}   style={{
+        padding: "5px 12px",
+        cursor: "pointer",
+        backgroundColor: user.email === activeuser ? "#FF7518" : "transparent", 
+           color: hovered === user.email ? "blue" : "black"
+      }} >{user.name}                      </li>
                             )
 
-                        })}
+                        }):"No Account found" }  
+                       
 
 
 
-                        <li> <button type="button" class="btn btn-danger" onClick={PerformLogOut}>LogOut</button></li>
-                    </ul>
-                </div>
+                        <li style={{cursor: "pointer"}} onClick={PerformLogOut}>LogOut</li>
+                    </ul> 
+                 </div> 
             </div>
-        </nav>
+              </nav>
+              
+              </div>
+        
+        
     );
 }
 
 export default NavBar;
 
 
-// <ul className={`DropdownMenu ${isDropdownOpen ? "Show" : ""}`}>
-// <li><Link to="/profile">Profile</Link></li>
-// <li><Link to="/settings">Settings</Link></li>
-// <li><Link to="/help">Help</Link></li>
-// <li className="Logout"><Link to="/logout">Logout</Link></li>
-// </ul>
+

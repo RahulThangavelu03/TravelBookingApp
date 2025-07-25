@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 
 import { useNavigate } from "react-router-dom"
+ import { ToastContainer, toast ,Zoom } from 'react-toastify';
 
 function LoginComponnent() {
 
@@ -27,9 +28,10 @@ function LoginComponnent() {
 
 
 
-    function handleSubmit() {
+    function handleSubmit(e) {
 
         let ExsistingUser
+        e.preventDefault()
 
         try {
             if (userData) {
@@ -54,7 +56,19 @@ function LoginComponnent() {
 
 
             else {
-                alert("account not found,please Signup")
+
+
+toast.error('account not found,please Signup', {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
             }
         }
         catch (error) {
@@ -74,10 +88,11 @@ function LoginComponnent() {
 
         <div id="LoginContainer">
 
+ <ToastContainer/> 
             <div id="Login">
                 <h3 style={{ paddingLeft: "15px", paddingTop: "5px" }}>Login Here</h3>
 
-                <form id="form" onSubmit={handleSubmit}>
+                <form id="form" onSubmit={(e)=>handleSubmit(e)}>
 
 
                     <div className="form-group"><br />
@@ -114,6 +129,7 @@ function LoginComponnent() {
 
                     </div><br />
                     <button type="submit" className="btn btn-primary">Login</button> don't have acccount?
+                     
                 </form>
 
                 <Link style={{ paddingLeft: "100px" }} to="/Signup">Signup</Link>
@@ -126,6 +142,7 @@ function LoginComponnent() {
 
 
             </div>
+             
         </div>
     )
 

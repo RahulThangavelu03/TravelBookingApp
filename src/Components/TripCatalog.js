@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { MyToursAction } from "../Features/UserData";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+ import { ToastContainer, toast ,Zoom } from 'react-toastify';
+
 // import gallery06 from "../src/assets/images/gallery-06.jpg"
 
 
@@ -18,13 +20,27 @@ function TripCatalog() {
     const [formdate, setFormDate] = useState()
     const [TotalMembers, setTotalMembers] = useState()
     const [CatalogData, setCatalogData] = useState(tours)
-    const [searchData, setSearchData] = useState(tours)
+    const[CopyValue,setCopyValue] = useState(tours)
+  
 
-    const userIdExsist = useSelector(state => state.User)
+
     const Dispatch = useDispatch()
     const Navigate = useNavigate()
 
-    console.log(userIdExsist, "userIdExsist")
+
+    const UserData=useSelector(state=>state.User)
+    // console.log(UserData,"UserData=========")
+    const activeUser= UserData.activeuser   
+    // console.log(activeUser,"actvieUser=========")
+    
+    
+    
+    
+    
+    
+    const MytoursData=UserData.IDs.find(i=>i.email==activeUser)
+    
+    console.log(MytoursData,"Myturs dta travel destiantio ")
 
 
     function HandleForm(e) {
@@ -47,8 +63,6 @@ function TripCatalog() {
             D2 = new Date(ClosingDate)
 
 
-            // console.log(D1, "d11111111")
-            // console.log(D2, "d222222222")
         })
 
 
@@ -60,13 +74,13 @@ function TripCatalog() {
 
         if (D3 >= D1 && D3 <= D2) {
 
-            setCatalogData(temp)
-            console.log(searchData, "searchdata")
+            setCopyValue(temp)
+            console.log(CopyValue, "search results")
 
         }
 
         else {
-            setCatalogData([])
+            setCopyValue([])
         }
 
 
@@ -75,53 +89,93 @@ function TripCatalog() {
     }
 
 
-    function ShowAll() {
-        setCatalogData(tours)
+   
+    
+     
+    function ButtonFilter(type){
+
+    if(type=="ShowAll"){
+
+setCopyValue(CatalogData)
 
     }
-    function MountainsFilter() {
-        const Mountains = CatalogData.filter(i => i.landscape == "Mountain")
-        setCatalogData(Mountains)
+    else{
+ let Destination = CatalogData.filter(i => i.landscape == type)
+
+ setCopyValue(Destination)
 
     }
-
-    function BeachFilter() {
-        let Beaches = CatalogData.filter(i => i.landscape == "Beach")
-        setCatalogData(Beaches)
-
-    }
-
-    function IconicPlacesFilter() {
-        let Destination = CatalogData.filter(i => i.landscape == "Iconic")
-        setCatalogData(Destination)
+    
+}
 
 
-    }
 
     function AddtoMYTours(i, e) {
 
         e.stopPropagation()
 
-        // console.log(i, "ii")
 
+                if(!(UserData.IDs.length>0)){
+          
+toast.warn('Account not found Login/Sign Up ', {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
+          
 
+ return 
+        
+                }
+        
+           let Duplicate =  MytoursData.Tours.findIndex(data=>data.name==i.name) 
+        
+         if(Duplicate==-1){
+     
 
-        let temp = sessionStorage.getItem("sessions")
+        toast.success('Destination Added to Mytours', {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: false,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
 
-        // console.log(temp, "tempppppppppppppp")
-
-        if (temp) {
-
-
-            Dispatch(MyToursAction(i))
-
+        
+        Dispatch(MyToursAction(i))
+        
         }
+        
+        else{
+        
+        
+        
+toast.warn('Destination is already added to MyTours', {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
+          
 
-        else {
+  }
+        
 
-
-            alert("user account not found please login or SignUp")
-        }
 
 
     }
@@ -132,20 +186,16 @@ function TripCatalog() {
         console.log(i, "keyyyyyyyyyyyy")
         Navigate(`/destinations/${i}`)
 
-
-    }
-
+}
 
 
-
-
-    return (
+  return (
 
         <div>
 
             <div id="form">
 
-                <div class="container" style={{ "margin-left": "0" }}>
+                <div class="container" style={{ "marginleft": "0" }}>
                     <form class="d-flex justify-content-between" onSubmit={HandleForm}>
                         <div class="row g-3 w-100">
                             <div class="col-sm">
@@ -170,23 +220,25 @@ function TripCatalog() {
 
             </div><br /><br />
 
-            <div>The search results may be affected due to number of members selected and season time of the year...</div><br /><br />
+            <div style={{marginLeft:"20px"}}>The search results may be affected due to number of members selected and season time of the year...</div><br /><br />
 
             <div id="filter">
-                <button type="button" class="btn btn-primary" onClick={ShowAll}> Show All</button>
+          
 
-                <button type="button" class="btn btn-primary" onClick={BeachFilter}>Beaches</button>
-                <button type="button" class="btn btn-primary" onClick={MountainsFilter}>Mountains</button>
-                <button type="button" class="btn btn-primary" onClick={IconicPlacesFilter}>Iconic Places and stays</button>
+                <button type="button" class="btn btn-primary" onClick={()=>ButtonFilter("ShowAll")}> Show All</button>
+
+<button type="button" class="btn btn-primary" onClick={()=>ButtonFilter("Beach")}>Beaches</button>
+<button type="button" class="btn btn-primary" onClick={()=>ButtonFilter("Mountain")}>Mountains</button>
+<button type="button" class="btn btn-primary" onClick={()=>ButtonFilter("Iconic")}> Iconic Places-stays</button>
 
 
             </div><br />
 
             <div id="CatalogOptions">
 
-                {CatalogData.length ? CatalogData.map((i) => {
+                {CopyValue.length ? CopyValue.map((i) => {
                     return (
-                        <div key={i.key} onClick={(e) => HandleClick(i.key)}>
+                        <div className="card" key={i.key} onClick={(e) => HandleClick(i.key)}>
 
                             <img id="Catalogimage" src={i.image} alt={i.title} />
 
@@ -194,21 +246,19 @@ function TripCatalog() {
                             <p style={{ fontWeight: "Bold" }}>Name: {i.name}</p>
                             <p>Description: {i.description}</p>
                             <p> City: {i.city}</p>
-                            <p>Country: {i.country}</p>
+                         <p>Country: {i.country}</p>
 
-                            <button type="button" class="btn btn-primary" onClick={(e) => AddtoMYTours(i, e)}>Add to MyTours</button><br /><br />
+                            <button type="button" className="btn btn-primary" onClick={(e) => AddtoMYTours(i, e)}>Add to MyTours</button><br /><br />
+                            
 
-
-
-                        </div>
+  </div>
                     )
 
                 }) : <p id="para">Hmm... nothing here. Maybe try searching for your next dream destination?</p>}
 
             </div>
-
-
-        </div>
+             <ToastContainer/>
+  </div>
 
 
     )

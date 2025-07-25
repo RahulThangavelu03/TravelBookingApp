@@ -6,6 +6,7 @@ import { HandleSignUp } from "../Features/UserData"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
+ import { ToastContainer, toast ,Zoom } from 'react-toastify';
 
 function Signup() {
 
@@ -20,42 +21,73 @@ function Signup() {
 
     let Sessions = sessionStorage.getItem("sessions")
     Sessions = JSON.parse(Sessions)
-    console.log(Sessions, "duplicateeee SIgnupcomp")
+    
+    console.log(Sessions,"SignupCOm========")
 
 
 
-    console.log(state, "state in SIgnupCOmpoenet")
+
+
 
 
     function handleSubmit(e) {
+        e.preventDefault()
 
         let ExsistingUser
 
         if (Sessions) {
 
 
-            ExsistingUser = Sessions.IDs.find(i => i.email == userEmail)
+            ExsistingUser = Sessions && Sessions.IDs.find(i => i.email == userEmail)
         }
 
         if (ExsistingUser) {
 
 
             console.log(ExsistingUser, "exsistinguserExsisit")
-            alert("user id already exsist please login")
-
+      
+            
+toast.error('user id already exsist please login', {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
 
 
         }
 
         else {
 
-            dispatch(HandleSignUp({ username: userName, useremail: userEmail, userpassword: userPassword }))
+ dispatch(HandleSignUp({ username: userName, useremail: userEmail, userpassword: userPassword }))
 
-            Navigate("/TripCatalog")
+
+
+ 
+ 
+     
+ Navigate("/TripCatalog")
+
+
+
+
+
+
+ 
+                  
+                    
+                    }
+
+
         }
 
 
-    }
+    
 
 
 
@@ -63,10 +95,11 @@ function Signup() {
 
         <div id="SignupContainer">
 
+  <ToastContainer/>
             <div id="signup">
                 <h3 style={{ paddingLeft: "15px", paddingTop: "5px" }}>Signup Here</h3>
 
-                <form id="form" onSubmit={handleSubmit}>
+                <form id="form" onSubmit={(e)=>handleSubmit(e)}>
                     <div className="form-group">
                         <label>Name</label>
                         <input
@@ -120,6 +153,7 @@ function Signup() {
 
                     </div><br />
                     <button type="submit" className="btn btn-primary">Signup</button> Already have an acccount?
+                     
                 </form>
 
                 <Link style={{ paddingLeft: "100px" }} to="/Login">Login</Link>
@@ -132,6 +166,7 @@ function Signup() {
 
 
             </div>
+          
         </div>
     )
 }

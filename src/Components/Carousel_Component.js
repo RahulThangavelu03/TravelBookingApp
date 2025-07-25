@@ -31,7 +31,7 @@ function Carousel_Component({ data }) {
         },
     };
 
-    console.log(data, "data")
+
     return (
 
         <div className="SliderContainer">

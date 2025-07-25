@@ -1,50 +1,36 @@
 
-import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import tours from '../assets/data/tours'
 import { useInRouterContext } from 'react-router'
-
-
-
 
 
 const UserData = createSlice(
     {
 
-
-
         name: "Users",
-        initialState: [],
+        initialState: {
+
+activeuser:"",
+IDs:[]
+
+        },
         reducers: {
 
-            HandleSignUp(state, action) {
+ HandleSignUp(state, action) {
 
                 try {
 
                     let { username, useremail, userpassword } = action.payload
 
+                    let exsistingValue = JSON.parse(sessionStorage.getItem("sessions")) || {
 
-
-                    // state.push({ "name": username, "email": useremail, "password": userpassword })
-
-                    console.log(state.User, "stateeeee")
-
-
-                    let temp = sessionStorage.getItem("sessions")
-
-                    console.log(temp, "HAndleusertemp")
-                    let exsistingValue = temp ? JSON.parse(temp) : []
-                    console.log(exsistingValue, "exsistigvalu")
-
-                    if (!Array.isArray(exsistingValue.IDs)) {
-                        exsistingValue.IDs = []
+                        activeuser:"",
+                        IDs:[]
                     }
-
-
-                    const updatedIDs = [...exsistingValue.IDs, { "name": username, "email": useremail, Tours: [] }]
-                    console.log(exsistingValue, "exsistingvalue")
-                    console.log(updatedIDs, "updatedId")
-
-                    const sessions = {
+                 
+ const updatedIDs = [...exsistingValue.IDs, { "name": username, "email": useremail, "password":userpassword, Tours: [] }]
+                    
+const newSessionData = {
 
                         "activeuser": useremail,
 
@@ -52,95 +38,84 @@ const UserData = createSlice(
 
                     }
 
-                    sessionStorage.setItem("sessions", JSON.stringify(sessions))
-                    console.log(sessions, "sessions")
-                    state.push(sessions)
+                    sessionStorage.setItem("sessions", JSON.stringify(newSessionData))
+                    
+  state.activeuser = useremail
+
+    state.IDs=[... updatedIDs]
+   
+ }
+
+   catch (error) {
+                    console.log(error, "error message")
 
                 }
+},
 
-
-
-
-                catch (error) {
-
-                    console.log(error, "error occurs")
-
-
-                }
-            },
-
-            HandleLogin(state, action) {
+ HandleLogin(state, action) {
 
 
                 const { userEmail } = action.payload
 
-                let UserData = sessionStorage.getItem("sessions")
-                UserData = JSON.parse(UserData)
-                UserData.activeuser = userEmail
+                let sessions =   JSON.parse(sessionStorage.getItem("sessions"))
+              
+                sessions.activeuser = userEmail
 
-
-                const sessions = {
-
-                    ...{ UserData }
-
-                }
-
-                console.log(UserData, "LOgindataaaaaaa")
                 console.log(sessions, "LOginSessions")
                 sessionStorage.setItem("sessions", JSON.stringify(sessions))
 
+      state.activeuser = userEmail;
+
+
+
             },
 
+  HandleLogOut(state, action) {
 
-            HandleLogOut(state, action) {
+              
 
-                // alert("logout triggered")
+               let Sessions = sessionStorage.getItem("sessions")
 
-                let Sessions = sessionStorage.getItem("sessions")
+             console.log(Sessions,"sessions in handlelogout")
 
-                console.log(Sessions, "Initiallllllll")
+              console.log(JSON.parse(JSON.stringify(state)),"state in out=========")
 
-                try {
+              console.log(state.IDs,"state.IDs=====")
+
+
+try {
 
                     if (!Sessions) {
                         alert("No user ID found")
 
                     }
+                
                     else {
 
                         Sessions = JSON.parse(Sessions)
-                        console.log(Sessions, "sessions")
-                        console.log(Sessions.IDs, "Sessions.IDs")
+                        
 
-                        let Dummy = {}
+                        let NewSessions ={}
 
-                        if (Sessions.IDs.length >= 1) {
-
-
-                            let IDtoBeRemoved = Sessions.activeuser
+    if (Sessions.IDs.length >= 1)
+         {
+                 let IDtoBeRemoved = Sessions.activeuser
                             console.log(IDtoBeRemoved, "IDtoBERemoved")
 
                             let updatedIDs = Sessions.IDs.filter(i => i.email !== IDtoBeRemoved)
-
+                            console.log(Sessions.IDs.length, "Sessions>IDS.length")
+                            console.log(updatedIDs, "upadatedIDSSSSSSSSSs")
                             let NewActiveUser = updatedIDs.length >= 1 ? updatedIDs[updatedIDs.length - 1].email : ""
                             console.log(NewActiveUser, "Newactuveuser")
 
 
-                            Sessions = {
-                                "activeuser": NewActiveUser,
-                                "IDs": [
-                                    ...updatedIDs
-                                ]
-                            }
 
-                            console.log(Sessions, "PreSessionsssssssssss")
+                            console.log(NewSessions, "PreSessionsssssssssss")
+                            console.log(updatedIDs.length, " before if updatedIDSssssssss")
 
-                            let temp = {}
+                            if (updatedIDs && updatedIDs.length >= 1) {
 
-
-                            if (updatedIDs.length >= 1) {
-
-                                Sessions = {
+                                NewSessions = {
                                     "activeuser": NewActiveUser,
                                     "IDs": [
                                         ...updatedIDs
@@ -148,72 +123,64 @@ const UserData = createSlice(
 
                                 }
 
-                                state = []
-                                temp["activeuser"] = NewActiveUser
-                                temp["IDs"] = [...updatedIDs]
-
-                                state.push(temp)
-
-                                console.log("Indiseloooooop")
-
-
-
-
                             }
 
 
-                            console.log(updatedIDs, "updatedIDssssssssss")
+                            else{
 
+                                NewSessions= {
+
+activeuser:"",
+IDs:[]
+
+        }
+                            }
+                            console.log(updatedIDs, " after if updatedIDssssssssss")
                             console.log(NewActiveUser, "Newactiveuserrrr")
+                              sessionStorage.setItem("sessions", JSON.stringify(NewSessions))
+                        state.activeuser=NewSessions.activeuser
+                        state.IDs= updatedIDs.map(user=>({ ...user,
+                            Tours:[...user.Tours]
 
+
+                        }))
 
                         }
 
                         else {
 
 
-                            Sessions = {
+                            NewSessions = {
                                 "activeuser": "",
                                 "IDs": [
 
                                 ]
 
-
-
                             }
-
-
                         }
 
 
-                        console.log(Sessions, "NewSessionsssss")
+                        console.log(NewSessions, "NewSessionsssss")
 
-                        sessionStorage.setItem("Sessions", JSON.stringify(Sessions))
+                      
 
-
-
-
-                    }
-                }
-                catch (error) {
-
-                    console.log(error, "error inlogout")
+   }
 
                 }
+              catch (error) {
+
+                     console.log(error, "error inlogout")
+        }
 
 
 
-
-                console.log("custom hook")
             },
 
 
-            MyToursAction(state, action) {
+  MyToursAction(state, action) {
 
 
                 let temp = sessionStorage.getItem("sessions")
-
-                //console.log(temp, "temppppppppp")
 
                 let MyTourData = JSON.parse(temp) || { "tours": [] }
                 console.log(MyTourData, "MytourDataInitallllllll")
@@ -222,35 +189,77 @@ const UserData = createSlice(
                 console.log(activeuser, "activeuser",)
 
                 let index = MyTourData.IDs.findIndex(i => i.email == activeuser)
-                let Duplicate = MyTourData.IDs[index].Tours.findIndex(i => i.key == action.payload.key)
-                console.log(Duplicate, "DUplicateeeeeeeeeeeee")
-
-                if (Duplicate == -1) {
-
-
-                    MyTourData.IDs[index].Tours.push(action.payload)
-                }
-
-
-                else {
-                    console.log(MyTourData, "esleparttttttttt")
-
-                    return MyTourData
-
-                }
-
+                console.log(index,"indexxxx")
+               
+     MyTourData.IDs[index].Tours.push(action.payload)
+            
                 console.log(MyTourData, "mytourdata laterrrrrrrr")
 
                 sessionStorage.setItem("sessions", JSON.stringify(MyTourData));
+                state.IDs=MyTourData.IDs.map(users=>({...users,
+
+                    Tours:[...users.Tours]
 
 
-            }
 
-        }
+                }))
+
+
+            },
+
+        SwitchActiveUser(state,action ){
+
+   
+               let MyTourData = JSON.parse(sessionStorage.getItem("sessions"))
+                MyTourData.activeuser = action.payload
+                  sessionStorage.setItem("sessions", JSON.stringify(MyTourData));
+                  state.activeuser=action.payload
+
+ },
+
+
+
+
+
+
+        },
+
+           extraReducers: (builder) => {
+    builder.addCase("user/hydrate", (state, action) => {
+      const { activeuser, IDs } = action.payload;
+      state.activeuser = activeuser;
+
+      // Deep copy of Tours to ensure immutability
+      state.IDs = IDs.map((user) => ({
+        ...user,
+        Tours: Array.isArray(user.Tours) ? [...user.Tours] : [],
+      }));
+    });
+  }
+
+
     }
 )
 
-export const { HandleSignUp, HandleLogin, HandleLogOut, MyToursAction } = UserData.actions
+export const { HandleSignUp, HandleLogin, HandleLogOut, MyToursAction,SwitchActiveUser ,DataPersistance} = UserData.actions
+
+
+
+export const hydrateFromSession = () => (dispatch) => {
+  const SessionsData = JSON.parse(sessionStorage.getItem("sessions"));
+  if (SessionsData && SessionsData.IDs?.length > 0) {
+    dispatch({
+      type: "user/hydrate",
+      payload: SessionsData,
+    });
+  }
+};
+
+
+
+
+
+
 
 export default UserData.reducer
 
@@ -263,87 +272,7 @@ export default UserData.reducer
 
 
 
-// HandleLogOut(state, action) {
 
-//     // alert("logout triggered")
-
-//     let Sessions = sessionStorage.getItem("sessions")
-
-//     console.log(Sessions, "Initiallllllll")
-
-//     try {
-
-//         if (!Sessions) {
-//             alert("No user ID found")
-
-//         }
-//         else {
-
-//             Sessions = JSON.parse(Sessions)
-//             console.log(Sessions, "sessions")
-
-//             if (!Sessions.IDs || Sessions.IDs.length == 0) {
-
-
-//                 let IDtoBeRemoved = Sessions.activeuser
-//                 console.log(IDtoBeRemoved, "IDtoBERemoved")
-
-//                 let updatedIDs = Sessions.IDs.filter(i => i.email !== IDtoBeRemoved)
-
-//                 let NewActiveUser = updatedIDs.length >= 1 ? updatedIDs[updatedIDs.length - 1].email : ""
-//                 console.log(NewActiveUser, "Newactuveuser")
-//                 if (updatedIDs.length >= 1) {
-
-//                     Sessions = {
-//                         "activeuser": NewActiveUser,
-//                         "IDs": [
-//                             ...updatedIDs
-//                         ]
-
-
-
-//                     }
-
-//                 }
-
-
-//                 else {
-
-
-//                     Sessions = {
-//                         "activeuser": "",
-//                         "IDs": [
-
-//                         ]
-
-
-
-//                     }
-
-
-//                 }
-
-
-//                 console.log(Sessions, "NewSessionsssss")
-
-//                 sessionStorage.setItem("Sessions", JSON.stringify(Sessions))
-
-
-//             }
-
-//         }
-//     }
-//     catch (error) {
-
-//         console.log(error, "error inlogout")
-
-//     }
-
-
-
-
-//     console.log("custom hook")
-// },
 
 
 
