@@ -29,64 +29,60 @@ function TripCatalog() {
 
 
     const UserData=useSelector(state=>state.User)
-    // console.log(UserData,"UserData=========")
     const activeUser= UserData.activeuser   
-    // console.log(activeUser,"actvieUser=========")
+   
+    const MytoursData=UserData.IDs.find(user=>user.email==activeUser)
     
+
+function HandleForm(e) {
+    e.preventDefault();
+
+  if (!location || !formdate || !TotalMembers) {
     
+toast.warn('Please fill all fields of the form ', {
+position: "top-center",
+autoClose: 2000,
+hideProgressBar: true,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Zoom,
+})
+  
+
+return
+
+
+  }
+
+
+
+
+    let temp = tours.filter(tour =>
+        tour.name.toLowerCase().startsWith(location.toLowerCase().trim()) &&
+        Number(tour.capacity) >= Number(TotalMembers)
+    );
+
+    let dateObj = new Date(formdate);
+    let month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    let day = dateObj.getDate().toString().padStart(2, '0');
+    let formMonthDay = `${month}-${day}`; 
+
     
-    
-    
-    
-    const MytoursData=UserData.IDs.find(i=>i.email==activeUser)
-    
-    console.log(MytoursData,"Myturs dta travel destiantio ")
+    let filtered = temp.filter(tour => {
+        let [openMonth, openDay] = tour.Open_from.split('/');
+        let [closeMonth, closeDay] = tour.Open_to.split('/');
 
+        let from = `${openMonth.padStart(2, '0')}-${openDay.padStart(2, '0')}`;
+        let to = `${closeMonth.padStart(2, '0')}-${closeDay.padStart(2, '0')}`;
 
-    function HandleForm(e) {
+        return formMonthDay >= from && formMonthDay <= to;
+    });
 
-        console.log("cliked")
-        e.preventDefault()
-
-
-        let temp = tours.filter(i => i.city.toLowerCase() == location.toLowerCase()).filter(i => i.capacity >= TotalMembers)
-        let D1
-        let D2
-
-        temp.forEach(i => {
-
-            let OpeningDate = i.Open_from
-            let ClosingDate = i.Open_to
-            console.log(ClosingDate, "closing")
-
-            D1 = new Date(OpeningDate)
-            D2 = new Date(ClosingDate)
-
-
-        })
-
-
-        console.log(formdate, "formdatw")
-
-        let D3 = new Date(formdate)
-
-        console.log(D3, "de33333")
-
-        if (D3 >= D1 && D3 <= D2) {
-
-            setCopyValue(temp)
-            console.log(CopyValue, "search results")
-
-        }
-
-        else {
-            setCopyValue([])
-        }
-
-
-        console.log(temp, "temp")
-
-    }
+    setCopyValue(filtered);
+}
 
 
    
@@ -100,7 +96,7 @@ setCopyValue(CatalogData)
 
     }
     else{
- let Destination = CatalogData.filter(i => i.landscape == type)
+ let Destination = CatalogData.filter(Data => Data.landscape == type)
 
  setCopyValue(Destination)
 
@@ -120,7 +116,7 @@ setCopyValue(CatalogData)
 toast.warn('Account not found Login/Sign Up ', {
 position: "top-center",
 autoClose: 2000,
-hideProgressBar: false,
+hideProgressBar: true,
 closeOnClick: true,
 pauseOnHover: true,
 draggable: true,
@@ -142,7 +138,7 @@ transition: Zoom,
         toast.success('Destination Added to Mytours', {
 position: "top-center",
 autoClose: 2000,
-hideProgressBar: false,
+hideProgressBar: true,
 closeOnClick: false,
 pauseOnHover: true,
 draggable: true,
@@ -163,7 +159,7 @@ transition: Zoom,
 toast.warn('Destination is already added to MyTours', {
 position: "top-center",
 autoClose: 2000,
-hideProgressBar: false,
+hideProgressBar: true,
 closeOnClick: true,
 pauseOnHover: true,
 draggable: true,
@@ -199,7 +195,7 @@ transition: Zoom,
                     <form class="d-flex justify-content-between" onSubmit={HandleForm}>
                         <div class="row g-3 w-100">
                             <div class="col-sm">
-                                <input type="text" class="form-control" placeholder="City" onChange={(e) => setLocation(e.target.value)} aria-label="City" />
+                                <input type="text" class="form-control" placeholder="Destination Name" onChange={(e) => setLocation(e.target.value)} aria-label="City" />
                             </div>
                             <div class="col-sm">
                                 <input type="Date" class="form-control" placeholder="Date" onChange={(e) => setFormDate(e.target.value)} aria-label="State" />
@@ -220,7 +216,7 @@ transition: Zoom,
 
             </div><br /><br />
 
-            <div style={{marginLeft:"20px"}}>The search results may be affected due to number of members selected and season time of the year...</div><br /><br />
+            <div style={{marginLeft:"20px"}}>The search results may be affected by number of members selected and season time of the year...</div><br /><br />
 
             <div id="filter">
           
