@@ -13,7 +13,6 @@ function LoginComponnent() {
   let userData = sessionStorage.getItem("sessions");
   userData = JSON.parse(userData);
 
-  console.log(userData, "userDataaaaa");
 
   const dispatch = useDispatch();
   const Navigate = useNavigate();
@@ -27,7 +26,7 @@ function LoginComponnent() {
         ExsistingUser = userData.IDs.find((i) => i.email == formEmail);
       }
 
-      console.log(ExsistingUser, "Exsistinguser");
+
 
       if (ExsistingUser) {
         dispatch(

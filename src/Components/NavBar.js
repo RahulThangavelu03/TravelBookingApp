@@ -29,7 +29,6 @@ function NavBar() {
   }, [Dispatch]);
 
 
-  console.log(Accounts, "accountssssssss");
   const activeuser = Accounts.activeuser;
 
   const AccountToBeLoggedOut =
@@ -37,7 +36,7 @@ function NavBar() {
       ? Accounts.IDs.find((user) => user.email == activeuser)
       : "";
 
-  console.log(AccountToBeLoggedOut, "AccountToBeLoggedOut");
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -84,7 +83,7 @@ function NavBar() {
 
   function HandleSwitchUSer(user) {
     Dispatch(SwitchActiveUser(user.email));
-    console.log(user, "user in Handleswicth");
+
   }
 
   return (

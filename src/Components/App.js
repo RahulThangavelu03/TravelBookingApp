@@ -13,7 +13,7 @@ import { ToastContainer, toast, Zoom } from "react-toastify";
 import ErrorBoundry from "./ErrorBoundry";
 
 function App() {
-  console.log(tours, "tourdssss");
+
 
   return (
     <div>

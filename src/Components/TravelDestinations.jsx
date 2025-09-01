@@ -21,10 +21,6 @@ function TravelDestination() {
 
   const MytoursData = UserData.IDs.find((Data) => Data.email == activeUser);
 
-  console.log(SelectedDestination, "selcetd");
-
-  console.log(UserData, "UserData in travelDestination");
-
   function AddtoMyTours(i) {
     if (UserData.IDs.length === 0) {
       toast.warn("Destination is already added to MyTours ", {
@@ -87,7 +83,7 @@ function TravelDestination() {
       <div>
         {SelectedDestination &&
           SelectedDestination.map((Destination) => {
-            console.log(Destination, "destiantion in map");
+            
             return (
               <div id="DestinationCard">
                 <img

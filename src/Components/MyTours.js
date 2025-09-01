@@ -17,10 +17,6 @@ function MyTours() {
 
   const UserData = MyToursData.IDs.filter((i) => i.email == activeuser);
 
-  console.log(UserData, "mytours userdtaaaaaa");
-  //   console.log(UserData[0].name," userdtaaaaaa.name=====")
-
-  //  console.log(UserData[0].Tours," userdtaaaaaa.Tours=====")
 
   function HandleIncreaseCount(Destination) {
     const Capacity = Destination.capacity;

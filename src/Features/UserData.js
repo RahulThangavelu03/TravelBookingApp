@@ -11,7 +11,7 @@ const UserData = createSlice({
   },
   reducers: {
     HandleSignUp(state, action) {
-      try {
+     
         const { username, useremail, userpassword } = action.payload;
 
         const exsistingValue = JSON.parse(
@@ -42,9 +42,7 @@ const UserData = createSlice({
         state.activeuser = useremail;
 
         state.IDs = [...updatedIDs];
-      } catch (error) {
-        console.log(error, "error message");
-      }
+      } 
     },
 
     HandleLogin(state, action) {
@@ -54,7 +52,6 @@ const UserData = createSlice({
 
       sessions.activeuser = userEmail;
 
-      console.log(sessions, "LOginSessions");
       sessionStorage.setItem("sessions", JSON.stringify(sessions));
 
       state.activeuser = userEmail;
@@ -63,14 +60,7 @@ const UserData = createSlice({
     HandleLogOut(state, action) {
       let Sessions = sessionStorage.getItem("sessions");
 
-      console.log(Sessions, "sessions in handlelogout");
-
-      console.log(JSON.parse(JSON.stringify(state)), "state in out=========");
-
-      console.log(state.IDs, "state.IDs=====");
-
-      try {
-        if (!Sessions) {
+      if (!Sessions) {
           alert("No user ID found");
         } else {
           Sessions = JSON.parse(Sessions);
@@ -79,21 +69,17 @@ const UserData = createSlice({
 
           if (Sessions.IDs.length >= 1) {
             const IDtoBeRemoved = Sessions.activeuser;
-            console.log(IDtoBeRemoved, "IDtoBERemoved");
+           
 
             const updatedIDs = Sessions.IDs.filter(
               (i) => i.email !== IDtoBeRemoved,
             );
-            console.log(Sessions.IDs.length, "Sessions>IDS.length");
-            console.log(updatedIDs, "upadatedIDSSSSSSSSSs");
+          
             const NewActiveUser =
               updatedIDs.length >= 1
                 ? updatedIDs[updatedIDs.length - 1].email
                 : "";
-            console.log(NewActiveUser, "Newactuveuser");
-
-            console.log(NewSessions, "PreSessionsssssssssss");
-            console.log(updatedIDs.length, " before if updatedIDSssssssss");
+      
 
             if (updatedIDs && updatedIDs.length >= 1) {
               NewSessions = {
@@ -106,8 +92,6 @@ const UserData = createSlice({
                 IDs: [],
               };
             }
-            console.log(updatedIDs, " after if updatedIDssssssssss");
-            console.log(NewActiveUser, "Newactiveuserrrr");
             sessionStorage.setItem("sessions", JSON.stringify(NewSessions));
             state.activeuser = NewSessions.activeuser;
             state.IDs = updatedIDs.map((user) => ({
@@ -121,32 +105,29 @@ const UserData = createSlice({
             };
           }
 
-          console.log(NewSessions, "NewSessionsssss");
+      
         }
-      } catch (error) {
-        console.log(error, "error inlogout");
-      }
-    },
+      },
+    
 
     AddToMyToursSection(state, action) {
       const temp = sessionStorage.getItem("sessions");
 
       const MyTourData = JSON.parse(temp) || { tours: [] };
-      console.log(MyTourData, "MytourDataInitallllllll");
+
 
       const activeuser = MyTourData.activeuser;
-      console.log(activeuser, "activeuser");
+
 
       const index = MyTourData.IDs.findIndex((i) => i.email == activeuser);
-      console.log(index, "indexxxx");
+      
 
       const dummy = action.payload;
       dummy.Count = 1;
       dummy.ExpenseOfOneDestination = dummy.Count * dummy.ApproxDailyExpense;
 
-      console.log(dummy, "ExpsenseofDUmmmyyyyyyyyy");
 
-      console.log(MyTourData);
+    
 
       if (!MyTourData.IDs[index].Tours.Total) {
         MyTourData.IDs[index].Tours.Total = 0;
@@ -156,7 +137,6 @@ const UserData = createSlice({
 
       MyTourData.IDs[index].Tours.push(dummy);
 
-      console.log(MyTourData, "mytourdata laterrrrrrrr");
 
       sessionStorage.setItem("sessions", JSON.stringify(MyTourData));
       state.IDs = MyTourData.IDs.map((users) => ({
@@ -174,19 +154,16 @@ const UserData = createSlice({
     },
 
     IncreaseHeadCount(state, action) {
-      console.log(action.payload, "action.paload in Incresecount");
+  
       const { key } = action.payload;
-      console.log(key, "key=============");
+   
       const temp = state.activeuser;
 
       const activeuser = state.IDs.find((data) => data.email === temp);
       const index = state.IDs.findIndex(
         (user) => user.email == activeuser.email,
       );
-      console.log(JSON.parse(JSON.stringify(activeuser)), "activeuser======");
-
-      console.log(index, "index=========");
-
+      
       for (let i = 0; i < state.IDs[index].Tours.length; i++) {
         if (state.IDs[index].Tours[i].key == key) {
           state.IDs[index].Tours[i].Count += 1;
@@ -194,25 +171,20 @@ const UserData = createSlice({
       }
 
       const NewSessionStorge = JSON.parse(JSON.stringify(state));
-      console.log(NewSessionStorge, "NewSessiosntroge=======");
+    
       sessionStorage.setItem("sessions", JSON.stringify(NewSessionStorge));
     },
 
     DecreaseHeadCount(state, action) {
-      console.log(action.payload, "action.paload in Incresecount");
-      const { key } = action.payload;
-      console.log(key, "key=============");
-      const temp = state.activeuser;
+        const { key } = action.payload;
+    const temp = state.activeuser;
 
       const activeuser = state.IDs.find((data) => data.email === temp);
       const index = state.IDs.findIndex(
         (user) => user.email == activeuser.email,
       );
-      console.log(JSON.parse(JSON.stringify(activeuser)), "activeuser======");
-
-      console.log(index, "index=========");
-
-      const selectedDestination = state.IDs[index].Tours.filter(
+  
+    const selectedDestination = state.IDs[index].Tours.filter(
         (Destination) => Destination.key == key,
       );
 
@@ -262,7 +234,7 @@ const UserData = createSlice({
 
       sessionStorage.setItem("sessions", JSON.stringify(NewSessionData));
     },
-  },
+  
 
   extraReducers: (builder) => {
     builder.addCase("user/hydrate", (state, action) => {

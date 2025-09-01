@@ -131,7 +131,7 @@ function TripCatalog() {
   }
 
   function HandleClick(i) {
-    console.log(i, "keyyyyyyyyyyyy");
+  
     Navigate(`/destinations/${i}`);
   }
 
