@@ -24,10 +24,10 @@ function LoginComponnent() {
     e.preventDefault();
 
 
-    const email = e.target.email.value;     // direct from form
+    const email = e.target.email.value;     
   const password = e.target.password.value;
 
-    try {
+  
       if (userData) {
         ExsistingUser = userData.IDs.find((i) => i.email == email);
       }
@@ -59,14 +59,8 @@ function LoginComponnent() {
 
     }
     
-    
-    catch (error) {
-    //  alert(error, "error");
-     console.log(error,"erorr in login")
-
-
-      }
-  }
+  
+  
 
   return (
     <div id="LoginContainer">
