@@ -9,6 +9,8 @@ function Signup() {
   const [userName, setuserName] = useState();
   const [userEmail, setuserEmail] = useState();
   const [userPassword, setuserPassword] = useState();
+
+  const [Error,setError]=useState("")
   const Navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -28,18 +30,12 @@ function Signup() {
     }
 
     if (ExsistingUser) {
-      toast.error("user id already exsist please login", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Zoom,
-      });
-    } else {
+
+      setError("Email Id already exsist please login")
+     
+    }
+    
+    else {
       dispatch(
         HandleSignUp({
           username: userName,
@@ -97,7 +93,8 @@ function Signup() {
               onChange={(e) => setuserPassword(e.target.value)}
             />
           </div>
-          <br />
+          {Error && <p className="text-danger mt-2">{Error}</p>}
+         {!Error && <br />}
           <button type="submit" className="btn btn-primary">
             Signup
           </button>{" "}

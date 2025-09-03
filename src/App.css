@@ -218,7 +218,7 @@
   }
 }
 
-@media (max-width: 350-px) {
+@media (max-width: 300-px) {
   #SignupContainer {
     height: auto;
     flex-direction: column;
@@ -229,7 +229,7 @@
 
 #signup {
   border: 1px solid black;
-  height: 400px;
+  height: 450px;
   width: 350px;
   border-radius: 5%;
   position: relative;
@@ -242,7 +242,7 @@
 @media (max-width: 350px) {
   #signup {
     width: 95%;
-    max-width: 320px;
+    max-width: 350px;
     padding: 10px;
     margin-inline: auto;
   }

@@ -43,14 +43,17 @@ const UserData = createSlice({
 
         state.IDs = [...updatedIDs];
       } 
-    },
+    ,
 
     HandleLogin(state, action) {
+
       const { userEmail } = action.payload;
 
       const sessions = JSON.parse(sessionStorage.getItem("sessions"));
 
       sessions.activeuser = userEmail;
+
+console.log(sessions,"sesion handlelogin")
 
       sessionStorage.setItem("sessions", JSON.stringify(sessions));
 
@@ -234,7 +237,7 @@ const UserData = createSlice({
 
       sessionStorage.setItem("sessions", JSON.stringify(NewSessionData));
     },
-  
+  },
 
   extraReducers: (builder) => {
     builder.addCase("user/hydrate", (state, action) => {

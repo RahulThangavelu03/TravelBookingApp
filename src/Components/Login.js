@@ -1,14 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Signup from "./SignupComponent";
-import { HandleLogin } from "../Features/UserData";
+import  {HandleLogin}  from "../Features/UserData";
 import { useDispatch, useSelector } from "react-redux";
+import { HandleLogOut } from "../Features/UserData";
 
 import { ToastContainer, toast, Zoom } from "react-toastify";
 
 function LoginComponnent() {
   const [formEmail, setFormEmail] = useState();
   const [formPassword, setFormPassword] = useState();
+    const [error, setError] = useState("");
 
   let userData = sessionStorage.getItem("sessions");
   userData = JSON.parse(userData);
@@ -18,38 +20,52 @@ function LoginComponnent() {
   const Navigate = useNavigate();
 
   function handleSubmit(e) {
-    let ExsistingUser;
+    let ExsistingUser = null
     e.preventDefault();
+
+
+    const email = e.target.email.value;     // direct from form
+  const password = e.target.password.value;
 
     try {
       if (userData) {
-        ExsistingUser = userData.IDs.find((i) => i.email == formEmail);
+        ExsistingUser = userData.IDs.find((i) => i.email == email);
       }
 
+      console.log(ExsistingUser,"Exsitinguer)")
 
 
-      if (ExsistingUser) {
+      if (ExsistingUser && ExsistingUser.password==password) {
         dispatch(
-          HandleLogin({ userEmail: formEmail, userPassword: formPassword }),
+          HandleLogin({ userEmail: email, userPassword: password })
+          
         );
-
+   setError(""); 
         Navigate("/TripCatalog");
-      } else {
-        toast.error("account not found,please Signup", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Zoom,
-        });
       }
-    } catch (error) {
-      alert(error, "error");
+      
+      
+      else if(ExsistingUser )
+      {
+
+     setError("Incorrect email or password");
+       
+ }
+      
+            else {
+     setError("Account not found, please signup");
+
+      }
+
     }
+    
+    
+    catch (error) {
+    //  alert(error, "error");
+     console.log(error,"erorr in login")
+
+
+      }
   }
 
   return (
@@ -84,11 +100,14 @@ function LoginComponnent() {
               onChange={(e) => setFormPassword(e.target.value)}
             />
           </div>
+           {error && <p className="text-danger mt-2">{error}</p>}
           <br />
+
+
           <button type="submit" className="btn btn-primary">
             Login
           </button>{" "}
-          don't have acccount?
+          don't have an acccount?
         </form>
 
         <Link style={{ paddingLeft: "100px" }} to="/Signup">
